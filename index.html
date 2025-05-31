@@ -87,7 +87,24 @@
     </section>
   </main>
 
+  <!-- TrackJS Agent -->
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "cca67f8e9f2f4f59a9bb59e82639f230"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+
+  <script>
+    // Step 4: Custom Error 
+    class CustomError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = 'CustomError';
+      }
+    }
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,14 +112,120 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      // Step 3: Try/Catch/Finally for calculator
+      try {
+        if (secondNum == 0 && operator === '/') throw new CustomError('Division by zero');
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (err) {
+        // Handle error
+        console.error('Error occurred in calculation:', err);
+        output.innerHTML = 'Error';
+      } finally {
+        // Log attempts
+        console.log('Calculation attempt complete');
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+    let count = 0;
 
-    // Start your code here
-    // You may move this JS to another file if you wish
+    // Step 2: Console Testing
+    // Console Log
+    errorBtns[0].addEventListener('click', () => {
+      console.log('Console Log Demo');
+    });
+
+    // Console Error
+    errorBtns[1].addEventListener('click', () => {
+      console.error('Console Error Demo');
+    });
+
+    // Console Count
+    errorBtns[2].addEventListener('click', () => {
+      count++;
+      console.count('Count Button');
+    });
+
+    // Console Warn
+    errorBtns[3].addEventListener('click', () => {
+      console.warn('Console Warn Button');
+    });
+
+    // Console Assert
+    errorBtns[4].addEventListener('click', () => {
+      const number = 2;
+      const errorMsg = 'The number does not equal 3';
+      console.assert(number === 3, 'Assertion failed:', { number, errorMsg });
+    });
+
+    // Console Clear
+    errorBtns[5].addEventListener('click', () => {
+      console.clear();
+    });
+
+    // Console Dir
+    errorBtns[6].addEventListener('click', () => {
+      const obj = document.body;
+      console.dir(obj);
+    });
+
+    // Console dirxml
+    errorBtns[7].addEventListener('click', () => {
+      const element = document.body;
+      console.dirxml(element);
+    });
+
+    // Console Group Start
+    errorBtns[8].addEventListener('click', () => {
+      console.group('Grouped Logs');
+      console.log('Inside group 1');
+      console.log('Inside group 2');
+    });
+
+    // Console Group End
+    errorBtns[9].addEventListener('click', () => {
+      console.groupEnd();
+    });
+
+    // Console Table
+    errorBtns[10].addEventListener('click', () => {
+      const data = [
+        { className: 'Software Engineering', classNum: 110 },
+        { className: 'Theory of Computation', classNum: 105 }
+      ];
+      console.table(data);
+    });
+
+    // Start Timer
+    errorBtns[11].addEventListener('click', () => {
+      console.time('Timer');
+    });
+
+    // End Timer
+    errorBtns[12].addEventListener('click', () => {
+      console.timeEnd('Timer');
+    });
+
+    // Console Trace
+    errorBtns[13].addEventListener('click', () => {
+      function traceDemo() {
+        console.trace('Trace Button Pressed');
+      }
+      traceDemo();
+    });
+
+    // Trigger a Global Error
+    errorBtns[14].addEventListener('click', () => {
+      nonExistentFunction(); // Trigger global error
+    });
+
+    // Global error handler
+    window.onerror = function(message, source, lineno, colno, error) {
+      console.log('Global error caught: ', { message, source, lineno, colno, error });
+    };
   </script>
+
 </body>
 
 </html>
